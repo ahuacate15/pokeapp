@@ -1,4 +1,4 @@
-#Fri Sep 18 22:57:26 CST 2020
+#Sat Sep 19 00:37:16 CST 2020
 base.0=/home/tom/Documentos/repositorios/pokeapp/android/app/build/intermediates/dex/debug/mergeDexDebug/out/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex
