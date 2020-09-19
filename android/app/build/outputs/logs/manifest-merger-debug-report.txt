@@ -71,9 +71,9 @@ INJECTED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/debug/An
 INJECTED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/debug/AndroidManifest.xml:2:1-8:12
 INJECTED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/debug/AndroidManifest.xml:2:1-8:12
 	package
-		ADDED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:2:3-24
+		ADDED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:2:3-35
 		INJECTED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml
-		ADDED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:2:3-24
+		ADDED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:2:3-35
 		INJECTED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/debug/AndroidManifest.xml
 	android:versionName
 		INJECTED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml
@@ -141,7 +141,7 @@ MERGED from [com.facebook.soloader:annotation:0.8.2] /home/tom/.gradle/caches/tr
 	android:name
 		ADDED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:7:7-38
 		ADDED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:7:7-38
-activity#com.pokeapp.MainActivity
+activity#com.ahuacate15.pokeapp.MainActivity
 ADDED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:13:7-23:18
 	android:label
 		ADDED from /home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:15:9-41

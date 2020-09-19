@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.pokeapp"
+        applicationId "com.ahuacate15.pokeapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

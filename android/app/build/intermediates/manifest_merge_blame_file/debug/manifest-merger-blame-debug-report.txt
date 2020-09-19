@@ -1,6 +1,6 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-3    package="com.pokeapp"
+3    package="com.ahuacate15.pokeapp"
 4    android:versionCode="1"
 5    android:versionName="1.0" >
 6
@@ -20,7 +20,7 @@
 14
 15    <application
 15-->/home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:6:5-25:19
-16        android:name="com.pokeapp.MainApplication"
+16        android:name="com.ahuacate15.pokeapp.MainApplication"
 16-->/home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:7:7-38
 17        android:allowBackup="false"
 17-->/home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:11:7-34
@@ -39,7 +39,7 @@
 24-->/home/tom/Documentos/repositorios/pokeapp/android/app/src/debug/AndroidManifest.xml:7:18-53
 25        <activity
 25-->/home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:13:7-23:18
-26            android:name="com.pokeapp.MainActivity"
+26            android:name="com.ahuacate15.pokeapp.MainActivity"
 26-->/home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:14:9-37
 27            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
 27-->/home/tom/Documentos/repositorios/pokeapp/android/app/src/main/AndroidManifest.xml:16:9-86
