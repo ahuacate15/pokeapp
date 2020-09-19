@@ -52,6 +52,9 @@ Lista de pokemons
 }
 ```
 
+Para acceder a la imagen de los pokemon, utiliza el siguiente enlace (reemplazando el parametro por el nombre del mismo que aparece en la pokedex):  
+`https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/{name}.png`  
+
 ## Ejecutar el proyecto
 Conecta tu movil, activa el debugger por USB y ejecuta el comando `npm start`
 

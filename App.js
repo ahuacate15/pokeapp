@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Login from './view/Login';
 import Equipos from './view/Equipos';
+import AddEquipo from './view/AddEquipo';
 
 const Stack = new createStackNavigator();
 
@@ -15,15 +16,21 @@ const App = () => {
     <>
       <NavigationContainer>
         <Stack.Navigator
-          initialRoute="Login">
+          initialRoute="Equipos">
 
+            {/*
             <Stack.Screen
               name="Login"
               component={Login} />
+            */}
 
             <Stack.Screen
               name="Equipos"
               component={Equipos} />
+
+            <Stack.Screen
+              name="AddEquipo"
+              component={AddEquipo} />
 
         </Stack.Navigator>
       </NavigationContainer>
