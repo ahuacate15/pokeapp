@@ -1,12 +1,56 @@
 # pokeapp
 
 ## Referencia PokeAPI
+
 Regiones disponibles  
-**GET** `https://pokeapi.co/api/v2/region/`
+**GET** `https://pokeapi.co/api/v2/region/`  
+```javascript
+{
+    count : 8,
+    results : [
+        {
+            name : "kanto",
+            //detalle de la region
+            url : "https://pokeapi.co/api/v2/region/1/"
+        }
+    ]
+}
+```
+**GET** `https://pokeapi.co/api/v2/region/{id}`
 
-Sub-regiones disponibles  
-**GET** `https://pokeapi.co/api/v2/region/{id or name}/`
+```javascript
+{
+    id : 1,
+    locations : [...],
+    name : "kanto",
+    names : [...],
+    pokedexes : [
+        {
+            name : "kanto",
+            //pokemons de la region
+            url : "https://pokeapi.co/api/v2/pokedex/2/" 
+        }
+    ]
+}
 
+```
+
+Lista de pokemons  
+**GET** `https://pokeapi.co/api/v2/pokedex/2/`
+
+```javascript
+{
+    pokemon_entries : [
+        {
+            entry_number : 1,
+            pokemon_species : {
+                name : "bulbasur",
+                url : "https://pokeapi.co/api/v2/pokemon-species/1/"
+            }
+        }
+    ]
+}
+```
 
 ## Ejecutar el proyecto
 Conecta tu movil, activa el debugger por USB y ejecuta el comando `npm start`
