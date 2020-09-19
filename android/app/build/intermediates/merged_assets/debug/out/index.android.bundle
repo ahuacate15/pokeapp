@@ -403,7 +403,7 @@ __d(function(g,r,i,a,m,e,d){'use strict';var t=r(d[0]),n=r(d[1]),u=r(d[2]),c=r(d
 __d(function(g,r,i,a,m,e,d){'use strict';Object.defineProperty(e,"__esModule",{value:!0}),e.DynamicColorIOS=void 0;e.DynamicColorIOS=function(o){throw new Error('DynamicColorIOS is not available on this platform.')}},397,[]);
 __d(function(g,r,i,a,m,e,d){'use strict';Object.defineProperty(e,"__esModule",{value:!0}),e.ColorAndroid=void 0;var o=r(d[0]);e.ColorAndroid=function(n){return(0,o.ColorAndroidPrivate)(n)}},398,[66]);
 __d(function(g,r,i,a,m,e,d){'use strict';var n=r(d[0]),s=n.shape({x:n.number,y:n.number});m.exports=s},399,[68]);
-__d(function(g,r,i,a,m,e,d){var t=r(d[0]);Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0;var l=t(r(d[1])),n=r(d[2]),u=function(){return l.default.createElement(l.default.Fragment,null,l.default.createElement(n.StatusBar,{barStyle:"dark-content"}),l.default.createElement(n.SafeAreaView,null,l.default.createElement(n.Text,null,"HOLA")))};e.default=u},400,[1,55,2]);
+__d(function(g,r,i,a,m,e,d){var t=r(d[0]);Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0;var l=t(r(d[1])),n=r(d[2]),u=function(){return l.default.createElement(l.default.Fragment,null,l.default.createElement(n.StatusBar,{barStyle:"dark-content"}),l.default.createElement(n.SafeAreaView,null,l.default.createElement(n.Text,null,"HOLA"),l.default.createElement(n.Button,{title:"INICIAR SESION"})))};e.default=u},400,[1,55,2]);
 __d(function(p,a,e,o,n,d,i){n.exports={name:"pokeapp",displayName:"pokeapp"}},401,[]);
 __r(88);
 __r(0);
