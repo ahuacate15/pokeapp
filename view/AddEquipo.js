@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import { Text, View, ScrollView, Image } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Provider } from 'react-native-paper';
 import firebase from 'firebase';
 
 class AddEquipo extends React.Component {
@@ -14,11 +14,16 @@ class AddEquipo extends React.Component {
             },
             pokemonCards : [],
             listPokemons : [],
+            selectedPokemons : [],
             totalSelectedPokemons : 0
         }
+
+        
     }
-    /*
+    
     componentWillMount() {
+        /*
+        
           const firebaseConfig = {
             apiKey: "AIzaSyDS2eV54kuhGt91GkKoWiR7gBDtpvMI0jU",
             authDomain: "pokeapp-83e8e.firebaseapp.com",
@@ -35,7 +40,9 @@ class AddEquipo extends React.Component {
           }
           
 
-          
+          this.db = firebase.database();
+          */
+          /*
           firebase.database().ref('/user/001').set({
               name : 'carlos',
               edad : 24
@@ -44,13 +51,10 @@ class AddEquipo extends React.Component {
           }).catch(err => {
               console.log('no registrado');
           });
-
-          firebase.database().ref('/user').once('value', (data) => {
-              console.log('datos', data.toJSON());
-          });
+          */
+          
         
     }
-    */
 
     componentDidMount() {
         let region = this.props.route.params.region;
@@ -110,67 +114,107 @@ class AddEquipo extends React.Component {
             });
         })
 
-        this.setState({ listPokemons : listPokemons });
-
-        for(let i=0; i<uniqueId; i++) {
-            pokemonCards.push(
-                <View 
-                    key={this.state.listPokemons[i].key}
-                    style={{ 
-                        flex: 5,
-                        flexDirection: 'column',
-                        alignItems: 'center' 
-                     }}>
-
-                    <Image 
-                        style={{ width : 150, height : 150 }}
-                        source={{
-                            uri : this.state.listPokemons[i].imageFailed ? 
-                            'https://raw.githubusercontent.com/ahuacate15/biblioteca-estructura-datos/master/white-question-mark.jpg' : 
-                            `https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/${this.state.listPokemons[i].pokemon_species.name}.png`
-                        }}
-                        onError={() => {
-                            this.state.listPokemons[i].imageFailed = false;
-                        }} />
-
-                    <Text>{this.state.listPokemons[i].pokemon_species.name}</Text>
-                    <Button 
-                        icon="plus" 
-                        mode="contained" 
-                        disabled={this.state.listPokemons[i].selected}
-                        onPress={() => this.selectPokemon(this.state.listPokemons[i].key)}>
-                        seleccionar
-                    </Button>
-
-                </View>
-            );
-
-
-        }
-        this.setState({ pokemonCards : pokemonCards });
+        this.setState({ listPokemons : listPokemons }, () => {
+            console.log('carga lista');
+        });
     }
 
-    selectPokemon = (key) => {
-        if(this.state.totalSelectedPokemons < 6) {
-            this.setState({ totalSelectedPokemons : this.state.totalSelectedPokemons + 1 });
-            //this.state.listPokemons[0].selected = true;
-            //this.forceUpdate();
-            /*
-            this.setState({
-                listPokemons: update(this.state.listPokemons, {9: {name: {$selected: true }}})
-            })*/
+    setSelectPokemon = (key, selected) => {
+        //descarmar un pokemon
+        if(selected) {
+            this.setState({ totalSelectedPokemons : this.state.totalSelectedPokemons - 1 });
+            this.state.listPokemons[key].selected = false;
+
+            //encuentro el indice en donde se ubica el pokemon
+            let index = 0;
+
+            for(let i=0; i<this.state.totalSelectedPokemons; i++) {
+                if(this.state.selectedPokemons[i].key == key) {
+                    this.state.selectedPokemons.splice(index, 1);
+                    break;
+                }
+            }
+
+
+        } 
+        //seleccionar un pokemon 
+        else {
+            if(this.state.totalSelectedPokemons < 6) {
+                this.setState({ totalSelectedPokemons : this.state.totalSelectedPokemons + 1 });
+                this.state.listPokemons[key].selected = true;
+                this.state.selectedPokemons.push(this.state.listPokemons[key]);
+            }
         }
+        
+    }
+
+    saveEquipo = () => {
+        console.log('equipo seleccionado', this.state.selectedPokemons);
+        
+        firebase.database().ref('/user/001').set({
+            name : 'carlos',
+            edad : 24
+        }).then(data => {
+            console.log('registros insertados');
+        }).catch(err => {
+            console.log('no registrado');
+        });
     }
 
     render() {
         return(
-            <View>
-                <Text>Región seleccionada : {this.state.region.name}</Text>
-                <Text>Equipo seleccionado : {this.state.totalSelectedPokemons} de 6</Text>
-                <ScrollView>
-                    {this.state.pokemonCards}
-                </ScrollView>
-            </View>
+            <Provider>
+                <View style={{ padding : 15, marginBottom : 90 }}>
+                    <Text style={{ fontSize : 15 }}>Región seleccionada : {this.state.region.name}</Text>
+                    <Text style={{ fontSize : 15 }}>{this.state.totalSelectedPokemons} de 6 pokemons</Text>
+                    <ScrollView>
+
+                        {this.state.listPokemons.map((pokemon) => (
+                        
+                                <View 
+                                    key={pokemon.key}
+                                    style={{ 
+                                        flex: 5,
+                                        flexDirection: 'column',
+                                        alignItems: 'center' 
+                                    }}>
+
+                                    <Image 
+                                        style={{ width : 150, height : 150 }}
+                                        source={{
+                                            uri : pokemon.imageFailed ? 
+                                            'https://raw.githubusercontent.com/ahuacate15/biblioteca-estructura-datos/master/white-question-mark.jpg' : 
+                                            `https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/${pokemon.pokemon_species.name}.png`
+                                        }}
+                                        onError={() => {
+                                            pokemon.imageFailed = false;
+                                            this.state.listPokemons[pokemon.key].imageFailed = true;
+                                        }} />
+
+                                    <Text>{pokemon.pokemon_species.name}</Text>
+                                    <Button 
+                                        icon={pokemon.selected ? "cancel" : "plus"} 
+                                        mode={pokemon.selected ? "text" : "outlined"} 
+                                        disabled={!pokemon.selected && this.state.totalSelectedPokemons == 6}
+                                        onPress={() => this.setSelectPokemon(pokemon.key, pokemon.selected)}>
+                                        {pokemon.selected ? "des-seleccionar" : "seleccionar"}
+                                    </Button>
+
+                                </View>    
+                        
+                        ))}
+                    </ScrollView>
+                </View>
+
+                <Button
+                    style={{ position : 'absolute', bottom : 15, borderRadius : 30, alignSelf : 'center' }}
+                    icon="content-save"
+                    mode="contained" 
+                    disabled={this.state.totalSelectedPokemons < 3 || this.state.totalSelectedPokemons > 6}
+                    onPress={() => this.saveEquipo()}>
+                        guardar
+                </Button>
+            </Provider>
         );
     }
 }

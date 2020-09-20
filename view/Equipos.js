@@ -105,7 +105,7 @@ class Equipos extends React.Component {
                     
                     <Button 
                         style={{ position : 'absolute', bottom : 15, borderRadius : 30, alignSelf : 'center' }} 
-                        icon="camera" 
+                        icon="plus" 
                         mode="contained"
                         onPress={() => this.goToAddEquipo()}>Crear equipo</Button>
                 </View>

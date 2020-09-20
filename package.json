@@ -16,6 +16,7 @@
     "@react-navigation/stack": "^5.9.0",
     "firebase": "^7.21.0",
     "react": "16.13.1",
+    "react-addons-update": "^15.6.2",
     "react-native": "0.63.2",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-optimized-flatlist": "^1.0.4",
