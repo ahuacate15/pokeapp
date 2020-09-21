@@ -326,7 +326,36 @@ class AddEquipo extends React.Component {
 
     renderCard = (pokemon) => {
         return (
-            <></>
+            <View 
+                key={pokemon.key}
+                style={{ 
+                    flex: 5,
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    zIndex: 0 
+                }} >
+                <Image 
+                    style={{ width : 150, height : 150 }}
+                    source={{
+                        uri : pokemon.imageFailed ? 
+                        'https://raw.githubusercontent.com/ahuacate15/biblioteca-estructura-datos/master/white-question-mark.jpg' : 
+                        `https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/${pokemon.pokemon_species.name}.png`
+                    }}
+                    onError={() => {
+                        pokemon.imageFailed = false;
+                        this.state.listPokemons[pokemon.key].imageFailed = true;
+                        this.forceUpdate();
+                    }} />
+
+                <Text>{pokemon.pokemon_species.name}</Text>
+                <Button 
+                    icon={pokemon.selected ? "cancel" : "plus"} 
+                    mode={pokemon.selected ? "text" : "outlined"} 
+                    disabled={!pokemon.selected && this.state.totalSelectedPokemons == 6}
+                    onPress={() => this.setSelectPokemon(pokemon.key, pokemon.selected)}>
+                    {pokemon.selected ? "des-seleccionar" : "seleccionar"}
+                </Button>
+            </View>     
         );
     }
 
@@ -345,37 +374,13 @@ class AddEquipo extends React.Component {
                         <Text style={{ fontSize : 15, fontWeight : 'bold' }}>{this.state.totalSelectedPokemons} de 6 pokemons</Text>   
                     </View>
                     
+                   
                     <ScrollView>
                             {this.state.listPokemons.map((pokemon) => (
-                                <View 
-                                    key={pokemon.key}
-                                    style={{ 
-                                        flex: 5,
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        zIndex: 0 
-                                    }} >
-                                    <Image 
-                                        style={{ width : 150, height : 150 }}
-                                        source={{
-                                            uri : pokemon.imageFailed ? 
-                                            'https://raw.githubusercontent.com/ahuacate15/biblioteca-estructura-datos/master/white-question-mark.jpg' : 
-                                            `https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/${pokemon.pokemon_species.name}.png`
-                                        }}
-                                        onError={() => {
-                                            pokemon.imageFailed = false;
-                                            this.state.listPokemons[pokemon.key].imageFailed = true;
-                                        }} />
-
-                                    <Text>{pokemon.pokemon_species.name}</Text>
-                                    <Button 
-                                        icon={pokemon.selected ? "cancel" : "plus"} 
-                                        mode={pokemon.selected ? "text" : "outlined"} 
-                                        disabled={!pokemon.selected && this.state.totalSelectedPokemons == 6}
-                                        onPress={() => this.setSelectPokemon(pokemon.key, pokemon.selected)}>
-                                        {pokemon.selected ? "des-seleccionar" : "seleccionar"}
-                                    </Button>
-                                </View>           
+                                 <View style={{ flexDirection : 'row', justifyContent : 'space-between'}}>
+                                    {this.renderCard(pokemon)}
+                                 </View>
+                                      
                             ))}
                     </ScrollView>
                 </View>

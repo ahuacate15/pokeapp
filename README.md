@@ -1,5 +1,12 @@
 # pokeapp
 
+## Problemas al compilar la aplicacion
+Si el proyecto no refresca tus cambios, ejecuta los siguientes comandos:
+- `react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res`
+- despliega la aplicacion con `npx react-native run-android`
+- finalmente, ejecuta `npm start`
+- si la app sigue sin mostrar tus cambios, desinstalala y ejecuta los pasos nuevamente
+
 ## Referencia PokeAPI
 
 Regiones disponibles  
@@ -54,16 +61,3 @@ Lista de pokemons
 
 Para acceder a la imagen de los pokemon, utiliza el siguiente enlace (reemplazando el parametro por el nombre del mismo que aparece en la pokedex):  
 `https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/{name}.png`  
-
-## Ejecutar el proyecto
-Conecta tu movil, activa el debugger por USB y ejecuta el comando `npm start`
-
-Para refrescar la aplicacion, presiona *r* desde la CLI de react-native
-
-## Problemas al compilar la aplicacion
-Si el proyecto no refresca tus cambios, ejecuta los siguientes comandos:
-- `react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res`
-- despliega la aplicacion con `npx react-native run-android`
-- finalmente, ejecuta `npm start`
-- si la app sigue sin mostrar tus cambios, desinstalala y ejecuta los pasos nuevamente
-

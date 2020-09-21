@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Keyboard, AsyncStorage, Alert } from 'react-native';
+import { Text, View, Keyboard, ScrollView, AsyncStorage, Alert } from 'react-native';
 import { TextInput, Menu, Button, Provider, List, TouchableRipple, Card, Paragraph, Modal, Portal, Snackbar } from 'react-native-paper';
 import firebase from 'firebase';
 import firebaseConfig from './../firebase/config';
@@ -181,11 +181,13 @@ class Equipos extends React.Component {
                         instance.setState({ modalVisible : false });
                         instance.setState({ snackbarVisible : true });
                         instance.setState({ snackbarMessage : 'Equipo agregado'});
+                        instance.setState({ codigo : '' });
                     })
                     .catch(err => {
                         instance.setState({ modalVisible : false });
                         instance.setState({ snackbarVisible : true });
-                instance.setState({ snackbarMessage : 'Error al agregar equipo'});
+                        instance.setState({ snackbarMessage : 'Error al agregar equipo'});
+                        instance.setState({ codigo : '' });
                     })
             } else {
                 console.log('el codigo no existe');
@@ -203,7 +205,8 @@ class Equipos extends React.Component {
                     style={{
                         flex : 1,
                         flexDirection: 'column',
-                        padding : 15
+                        padding : 15,
+                        paddingBottom : 120
                     }}>
                     <Menu
                         visible={this.state.menuVisible}
@@ -229,31 +232,34 @@ class Equipos extends React.Component {
                     </Menu>
                     <View style={{ marginTop : 15 }}>
 
-                    {this.state.listEquipos.length == 0 && (
-                        <Card>
-                            <Card.Title title="Sin resultados"></Card.Title>
-                            <Card.Content>
-                                <Paragraph>Parece que no posees equipos en esta región</Paragraph>
-                            </Card.Content>
-                        </Card>
-                    )}
-                    {this.state.listEquipos.map((equipo) => (
-                        <TouchableRipple 
-                            key={equipo.key}
-                            onPress={() => this.goToEditEquipo(equipo)}>
-                            <List.Item
-                                title={equipo.data.name}
-                                description={`Código : ${equipo.data.key}`}
-                                left={props => <List.Icon {...props} icon="pokemon-go" />}
-                                right={
-                                    props => 
-                                        <TouchableRipple onPress={() => this.deleteEquipoModal(equipo)}>
-                                            <List.Icon {...props} icon="delete" />
-                                        </TouchableRipple>
-                                    }
-                            />
-                        </TouchableRipple>
-                    ))}
+                        {this.state.listEquipos.length == 0 && (
+                            <Card>
+                                <Card.Title title="Sin resultados"></Card.Title>
+                                <Card.Content>
+                                    <Paragraph>Parece que no posees equipos en esta región</Paragraph>
+                                </Card.Content>
+                            </Card>
+                        )}
+
+                        <ScrollView>
+                        {this.state.listEquipos.map((equipo) => (
+                            <TouchableRipple 
+                                key={equipo.key}
+                                onPress={() => this.goToEditEquipo(equipo)}>
+                                <List.Item
+                                    title={equipo.data.name}
+                                    description={`Código : ${equipo.data.key}`}
+                                    left={props => <List.Icon {...props} icon="pokemon-go" />}
+                                    right={
+                                        props => 
+                                            <TouchableRipple onPress={() => this.deleteEquipoModal(equipo)}>
+                                                <List.Icon {...props} icon="delete" />
+                                            </TouchableRipple>
+                                        }
+                                />
+                            </TouchableRipple>
+                        ))}
+                        </ScrollView>
                     </View>              
                 </View>
 
@@ -279,7 +285,7 @@ class Equipos extends React.Component {
                                         style={{ marginTop : 15 }} 
                                         icon="content-save" 
                                         mode="contained"
-                                        onPress={() => this.searchCodigo()}>Agregar equipo</Button>
+                                        onPress={() => this.searchCodigo()}>nuevo</Button>
                                     </Card.Content>
                             </Card>
                         </View>      
@@ -291,7 +297,7 @@ class Equipos extends React.Component {
                         style={{ borderRadius : 30, marginRight : 5 }} 
                         icon="plus" 
                         mode="contained"
-                        onPress={() => this.goToAddEquipo()}>Crear equipo</Button>
+                        onPress={() => this.goToAddEquipo()}>Crear</Button>
                     <Button 
                         style={{ borderRadius : 30, marginLeft : 5 }} 
                         icon="search-web" 
