@@ -18,7 +18,7 @@ Al presionar el botón **crear** deberás elegir un nombre para tu equipo pokemo
 
 ![Crear equipo](https://user-images.githubusercontent.com/19592284/93779035-c0433780-fbe3-11ea-9c25-dd41a9b76c9d.png)
 
-### Cambio de código
+### Cambio de región
 Puedes moverte entre regiones utilizando el *select* de la pantalla principal.  
 Debes tomar en cuenta que los **codigos de equipo** que ingreses, deben pertenecer a la región seleccionada.
 
