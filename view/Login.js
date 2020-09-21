@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, AsyncStorage } from 'react-native';
+import { SafeAreaView, AsyncStorage, View } from 'react-native';
 
 import {
   GoogleSignin,
@@ -49,13 +49,13 @@ const Login = ({navigation}) => {
   
     return (
       <>
-        <SafeAreaView>
-        <GoogleSigninButton
-          style={{ width: 192, height: 48 }}
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
-          onPress={signIn} />
-        </SafeAreaView>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',  }}>
+            <GoogleSigninButton
+              style={{ width: 192, height: 48 }}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={signIn} />
+          </View>
       </>
     );   
 }

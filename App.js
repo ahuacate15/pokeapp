@@ -16,19 +16,22 @@ const App = () => {
     <>
       <NavigationContainer>
         <Stack.Navigator
-          initialRoute="Login">
+          initialRoute="Login" >
 
             <Stack.Screen
               name="Login"
-              component={Login} />
+              component={Login}
+              options={{ title: 'Inicio de sesion' }} />
 
             <Stack.Screen
               name="Equipos"
-              component={Equipos} />
+              component={Equipos}
+              options={{ title: 'Mis equipos' }} />
 
             <Stack.Screen
               name="AddEquipo"
-              component={AddEquipo} />
+              component={AddEquipo}
+              options={{ title: 'Crear equipo' }} />
 
         </Stack.Navigator>
       </NavigationContainer>

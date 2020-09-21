@@ -341,8 +341,8 @@ class AddEquipo extends React.Component {
                         onChangeText={text => this.setState({ nameEquipo : text })}
                         />
                     <View style={{ flexDirection : 'row', justifyContent: 'space-between', marginTop : 15 }}>
-                        <Text style={{ fontSize : 15 }}>Región seleccionada : {this.state.region.name}</Text>
-                        <Text style={{ fontSize : 15 }}>{this.state.totalSelectedPokemons} de 6 pokemons</Text>   
+                        <Text style={{ fontSize : 15, fontWeight : 'bold' }}>Región seleccionada : {this.state.region.name}</Text>
+                        <Text style={{ fontSize : 15, fontWeight : 'bold' }}>{this.state.totalSelectedPokemons} de 6 pokemons</Text>   
                     </View>
                     
                     <ScrollView>
