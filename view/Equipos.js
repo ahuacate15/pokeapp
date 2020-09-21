@@ -1,6 +1,8 @@
-import React, { Component, useEffect, useState } from 'react';
-import { Text, View, FlatList, Keyboard } from 'react-native';
-import { TextInput, Menu, Button, Provider } from 'react-native-paper';
+import React from 'react';
+import { Text, View, Keyboard, AsyncStorage } from 'react-native';
+import { TextInput, Menu, Button, Provider, List, TouchableRipple, Card, Paragraph } from 'react-native-paper';
+import firebase from 'firebase';
+import firebaseConfig from './../firebase/config';
 
 class Equipos extends React.Component {
 
@@ -9,14 +11,49 @@ class Equipos extends React.Component {
         this.state = {
             regions : [],
             selectedRegion : {},
-            selectedRegionText : '',
+            selectedRegionText : 'kanto',
             menuVisible : false,
-            menuItems : []
+            menuItems : [],
+            userInfo : null,
+            listEquipos : []
         }
     }
 
     componentDidMount() {
-        this.fetchRegions();
+        let instance = this;
+        
+
+        if(!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        AsyncStorage.getItem('userInfo')
+            .then(data => {
+                instance.userInfo = JSON.parse(data);
+                instance.fetchRegions();
+            });
+
+    }
+
+    convertListEquiposToArray = (listEquipos) => {
+        try {
+            //al utilizar directamente listEquipo, react native agrega mas elementos haciendo
+            //mas compleja la re-estructuracion de la lsita
+            let list = JSON.parse(JSON.stringify(listEquipos));
+            let formattedList = [];
+
+            Object.entries(list).forEach(([key, value]) => {
+                formattedList.push({
+                    key : key,
+                    data : value
+                });   
+            });
+            return formattedList;
+        } catch(err) {
+            return [];
+        }
+
+        
     }
 
     openMenu = () => {
@@ -49,8 +86,13 @@ class Equipos extends React.Component {
 
     selectRegion = (region) => {
         this.setState({ selectedRegion : region });
-        this.setState({ selectedRegionText : region.name });
+        this.setState({ selectedRegionText : region.name }, () => {
+            this.fetchEquiposByRegion();
+        });
         this.closeMenu();
+
+        
+        console.log('buscando region');
     }
 
     fetchRegions = () => {
@@ -65,9 +107,19 @@ class Equipos extends React.Component {
             })
     }
 
+    fetchEquiposByRegion = () => {
+        //por defecto muestro los equipos de kanto
+        firebase.database().ref('equipo/' + this.userInfo.id + '/' + this.state.selectedRegionText).on('value', (data) => {
+            this.setState({ listEquipos : this.convertListEquiposToArray(data) });
+        })
+    }
+
     goToAddEquipo = () => {
-        console.log('navigato to addEquipo');
         this.props.navigation.navigate('AddEquipo', { region : this.state.selectedRegion });
+    }
+
+    goToEditEquipo = (equipo) => {
+        this.props.navigation.navigate('AddEquipo', { region : this.state.selectedRegion, equipo : equipo});
     }
 
     render() {
@@ -88,21 +140,43 @@ class Equipos extends React.Component {
                             width : '92.5%'
                         }}
                         anchor={
-                            <TextInput
-                                label="Región"
-                                mode="outlined"
-                                pointerEvents="none"
-                                editable={false}
-                                value={this.state.selectedRegionText}
-                                onChangeText={name => this.setState({selectedRegionText : name }) }
-                                right={
-                                    <TextInput.Icon name="chevron-down" onPress={this.openMenu}/>
-                                }
-                            />
+                            <TouchableRipple onPress={this.openMenu}>
+                                <TextInput
+                                    label="Región"
+                                    mode="outlined"
+                                    pointerEvents="none"
+                                    editable={false}
+                                    value={this.state.selectedRegionText}
+                                    onChangeText={name => this.setState({selectedRegionText : name }) }
+                                    right={ <TextInput.Icon name="chevron-down" onPress={this.openMenu}/> }
+                                />
+                            </TouchableRipple>
                         }>
                         {this.state.menuItems}
                     </Menu>
-                    
+                    <View style={{ marginTop : 15 }}>
+
+                    {this.state.listEquipos.length == 0 && (
+                        <Card>
+                            <Card.Title title="Sin resultados"></Card.Title>
+                            <Card.Content>
+                                <Paragraph>Parece que no posees equipos en esta región</Paragraph>
+                            </Card.Content>
+                        </Card>
+                    )}
+                    {this.state.listEquipos.map((equipo) => (
+                        <TouchableRipple 
+                            key={equipo.key}
+                            onPress={() => this.goToEditEquipo(equipo)}>
+                            <List.Item
+                                title={equipo.data.name}
+                                description={"Total de pokemons : " + Object.keys(equipo.data.pokemons).length}
+                                left={props => <List.Icon {...props} icon="pokemon-go" />}
+                            />
+                        </TouchableRipple>
+                    ))}
+                    </View>
+
                     <Button 
                         style={{ position : 'absolute', bottom : 15, borderRadius : 30, alignSelf : 'center' }} 
                         icon="plus" 

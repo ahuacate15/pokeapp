@@ -16,13 +16,11 @@ const App = () => {
     <>
       <NavigationContainer>
         <Stack.Navigator
-          initialRoute="Equipos">
+          initialRoute="Login">
 
-            {/*
             <Stack.Screen
               name="Login"
               component={Login} />
-            */}
 
             <Stack.Screen
               name="Equipos"

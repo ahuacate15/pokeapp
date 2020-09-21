@@ -1,7 +1,8 @@
-import React, { Component, useContext } from 'react';
-import { Text, View, ScrollView, Image } from 'react-native';
-import { Button, Provider } from 'react-native-paper';
+import React  from 'react';
+import { Text, View, ScrollView, Image, AsyncStorage } from 'react-native';
+import { Button, Provider, Snackbar, TextInput } from 'react-native-paper';
 import firebase from 'firebase';
+import firebaseConfig from './../firebase/config';
 
 class AddEquipo extends React.Component {
 
@@ -12,53 +13,42 @@ class AddEquipo extends React.Component {
             region : {
                 name : ''
             },
+            equipo : null,
+            nameEquipo : '',
             pokemonCards : [],
             listPokemons : [],
             selectedPokemons : [],
-            totalSelectedPokemons : 0
+            totalSelectedPokemons : 0,
+            userInfo : null,
+            showSnackbar : false,
+            messageSnackbar : '',
+            loadingButton : false
         }
 
         
     }
-    
-    componentWillMount() {
-        /*
-        
-          const firebaseConfig = {
-            apiKey: "AIzaSyDS2eV54kuhGt91GkKoWiR7gBDtpvMI0jU",
-            authDomain: "pokeapp-83e8e.firebaseapp.com",
-            databaseURL: "https://pokeapp-83e8e.firebaseio.com",
-            projectId: "pokeapp-83e8e",
-            storageBucket: "pokeapp-83e8e.appspot.com",
-            messagingSenderId: "649843209856",
-            appId: "1:649843209856:web:c37ca2f59f2a149ba15865",
-            measurementId: "G-FQCP573PKZ"
-          };
-
-          if(!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-          }
-          
-
-          this.db = firebase.database();
-          */
-          /*
-          firebase.database().ref('/user/001').set({
-              name : 'carlos',
-              edad : 24
-          }).then(data => {
-              console.log('registros insertados');
-          }).catch(err => {
-              console.log('no registrado');
-          });
-          */
-          
-        
-    }
 
     componentDidMount() {
+        let instance = this;
         let region = this.props.route.params.region;
         this.fetchPokemons(region);
+
+        if(!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        AsyncStorage.getItem('userInfo')
+            .then(data => {
+                instance.userInfo = JSON.parse(data);
+                console.log('userInfo', data);
+            });
+
+        let equipo = this.props.route.params.equipo;
+
+        if(equipo != null) {
+            console.log('editando un equipo', equipo);
+            this.setState({ equipo : equipo });
+            this.setState({ nameEquipo : equipo.data.name });
+        }
     }
 
     fetchDetailPokedex = async (pokedex) => {
@@ -95,12 +85,7 @@ class AddEquipo extends React.Component {
 
 
     setPokemonCards = (listPokedexes) => {
-        let instance = this;
         var uniqueId = 0;
-        var pokemonCards = [];
-
-        let totalPokedexes = listPokedexes.length;
-
         //almaceno en un solo arreglo, los pokemon de todas las regiones 
         let listPokemons = [];
 
@@ -148,37 +133,82 @@ class AddEquipo extends React.Component {
         
     }
 
-    saveEquipo = () => {
-        console.log('equipo seleccionado', this.state.selectedPokemons);
-        
-        firebase.database().ref('/user/001').set({
-            name : 'carlos',
-            edad : 24
-        }).then(data => {
-            console.log('registros insertados');
-        }).catch(err => {
-            console.log('no registrado');
+    saveEquipo = async (selectedPokemons) => {
+
+        if(this.state.nameEquipo == '') {
+            this.setState({ messageSnackbar : 'Debes ingresar un nombre para tu equipo '});
+            this.setState({ showSnackbar : true });
+            return;
+        }
+
+        let arrayPokemons = [];
+        let instance = this;
+        this.setState({ loadingButton : true });
+        selectedPokemons.map(pokemon => {
+            //guardo unicamente los nombres
+            arrayPokemons.push(pokemon.pokemon_species.name);
         });
+
+        //la ruta base para guardar el registro queda como 'equipo/104656956906067055000/kanto'
+        firebase.database().ref('equipo/' + this.userInfo.id + '/' + this.props.route.params.region.name).push({
+            region : this.props.route.params.region.name,
+            name : this.state.nameEquipo,
+            userName : this.userInfo.name,
+            pokemons : arrayPokemons
+        }).then(data => {
+            console.log('registros insertados', data);
+            instance.setState({ loadingButton : false }, () => {
+                instance.setState({ showSnackbar : true });
+                instance.setState({ messageSnackbar : 'Equipo registrado correctamente' });
+            });
+            
+            
+        }).catch(err => {
+            console.log('no registrado', err);
+            instance.setState({ loadingButton : false }, () => {
+                instance.setState({ showSnackbar : true });
+                instance.setState({ messageSnackbar : 'Error al registrar tu equipo' });
+            });
+            
+            
+        });
+    }
+
+    closeSnackbar = () => {
+        this.setState({ showSnackbar : false });
+    }
+
+    renderCard = (pokemon) => {
+        return (
+            <></>
+        );
     }
 
     render() {
         return(
             <Provider>
-                <View style={{ padding : 15, marginBottom : 90 }}>
-                    <Text style={{ fontSize : 15 }}>Región seleccionada : {this.state.region.name}</Text>
-                    <Text style={{ fontSize : 15 }}>{this.state.totalSelectedPokemons} de 6 pokemons</Text>
+                <View style={{ padding : 15, marginBottom : 90, paddingBottom : 70 }}>
+                    <TextInput
+                        label="Nombre"
+                        mode="outlined"
+                        value={this.state.nameEquipo}
+                        onChangeText={text => this.setState({ nameEquipo : text })}
+                        />
+                    <View style={{ flexDirection : 'row', justifyContent: 'space-between', marginTop : 15 }}>
+                        <Text style={{ fontSize : 15 }}>Región seleccionada : {this.state.region.name}</Text>
+                        <Text style={{ fontSize : 15 }}>{this.state.totalSelectedPokemons} de 6 pokemons</Text>   
+                    </View>
+                    
                     <ScrollView>
-
-                        {this.state.listPokemons.map((pokemon) => (
-                        
+                            {this.state.listPokemons.map((pokemon) => (
                                 <View 
                                     key={pokemon.key}
                                     style={{ 
                                         flex: 5,
                                         flexDirection: 'column',
-                                        alignItems: 'center' 
-                                    }}>
-
+                                        alignItems: 'center',
+                                        zIndex: 0 
+                                    }} >
                                     <Image 
                                         style={{ width : 150, height : 150 }}
                                         source={{
@@ -199,21 +229,54 @@ class AddEquipo extends React.Component {
                                         onPress={() => this.setSelectPokemon(pokemon.key, pokemon.selected)}>
                                         {pokemon.selected ? "des-seleccionar" : "seleccionar"}
                                     </Button>
-
-                                </View>    
-                        
-                        ))}
+                                </View>           
+                            ))}
                     </ScrollView>
                 </View>
 
-                <Button
-                    style={{ position : 'absolute', bottom : 15, borderRadius : 30, alignSelf : 'center' }}
-                    icon="content-save"
-                    mode="contained" 
-                    disabled={this.state.totalSelectedPokemons < 3 || this.state.totalSelectedPokemons > 6}
-                    onPress={() => this.saveEquipo()}>
-                        guardar
-                </Button>
+                {this.state.equipo == null && (
+                    <Button
+                        style={{ position : 'absolute', bottom : 15, borderRadius : 30, alignSelf : 'center',  zIndex: 1 }}
+                        icon="content-save"
+                        mode="contained" 
+                        loading={this.state.loadingButton}
+                        disabled={this.state.totalSelectedPokemons < 3 || this.state.totalSelectedPokemons > 6}
+                        onPress={() => this.saveEquipo(this.state.selectedPokemons)}>
+                            guardar
+                    </Button>
+                )}
+
+                {this.state.equipo != null && (
+                    <View style={{ flex : 1, position : 'absolute', width : '100%', bottom : 15, flexDirection : 'row', justifyContent: 'center', alignItems: 'center' }}>
+                        <Button
+                            style={{ borderRadius : 30 }}
+                            icon="content-save"
+                            mode="contained" 
+                            loading={this.state.loadingButton}
+                            disabled={this.state.totalSelectedPokemons < 3 || this.state.totalSelectedPokemons > 6}
+                            onPress={() => this.saveEquipo(this.state.selectedPokemons)}>
+                                modificar
+                        </Button>
+                        <Button
+                            style={{ borderRadius : 30 }}
+                            icon="delete"
+                            mode="contained" 
+                            loading={this.state.loadingButton}
+                            onPress={() => this.saveEquipo(this.state.selectedPokemons)}>
+                                eliminar
+                        </Button>
+                    </View>
+                    
+                )}
+                
+
+                <Snackbar
+                    visible={this.state.showSnackbar}
+                    onDismiss={this.closeSnackbar}
+                    duration={Snackbar.DURATION_SHORT}
+                    action={{ label : 'Cerrar', onPress : () => this.closeSnackbar }}
+                    style={{ backgroundColor : '#424242' }}
+                    theme={{ colors: { accent: '#fff' }}}>{this.state.messageSnackbar}</Snackbar>
             </Provider>
         );
     }
