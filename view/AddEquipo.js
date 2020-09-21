@@ -307,18 +307,20 @@ class AddEquipo extends React.Component {
         equipo.data.pokemons = this.extractSelectedPokemons(equipo.data.pokemons).concat(arrayPokemons);
         equipo.data.name = this.state.nameEquipo;
 
+        console.log('antes de map', equipo);
         //elimino los duplicados
         equipo.data.pokemons = Array.from(new Set(equipo.data.pokemons));
 
-        console.log('despues de seteo', equipo);
-
-        firebase.database().ref('equipo/' + this.props.route.params.region.name + '/' + this.userInfo.id + '/' + equipo.key).set(equipo.data)
-            .then(data => {
-                console.log('equipo actualizado', data);
-                instance.setState({ loadingButton : false });
-                instance.setState({ showSnackbar : true });
-                instance.setState({ messageSnackbar : 'Equipo modificado correctamente '});
-            });
+        firebase.database().ref('equipo/' + this.props.route.params.region.name + '/' + this.userInfo.id + '/' + equipo.key).set(
+            equipo.data
+        ).then(data => {
+            console.log('equipo actualizado', data);
+            instance.setState({ loadingButton : false });
+            instance.setState({ showSnackbar : true });
+            instance.setState({ messageSnackbar : 'Equipo modificado correctamente '});
+        }).catch(err => {
+            console.log('error al cambiar equipo', data);
+        })
     }
     closeSnackbar = () => {
         this.setState({ showSnackbar : false });
@@ -376,12 +378,7 @@ class AddEquipo extends React.Component {
                     
                    
                     <ScrollView>
-                            {this.state.listPokemons.map((pokemon) => (
-                                 <View style={{ flexDirection : 'row', justifyContent : 'space-between'}}>
-                                    {this.renderCard(pokemon)}
-                                 </View>
-                                      
-                            ))}
+                            {this.state.listPokemons.map((pokemon) => this.renderCard(pokemon))}
                     </ScrollView>
                 </View>
 
