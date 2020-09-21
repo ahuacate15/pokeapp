@@ -35,6 +35,7 @@ class Equipos extends React.Component {
 
     }
 
+    
     convertListEquiposToArray = (listEquipos) => {
         try {
             //al utilizar directamente listEquipo, react native agrega mas elementos haciendo
@@ -90,9 +91,6 @@ class Equipos extends React.Component {
             this.fetchEquiposByRegion();
         });
         this.closeMenu();
-
-        
-        console.log('buscando region');
     }
 
     fetchRegions = () => {
@@ -109,7 +107,7 @@ class Equipos extends React.Component {
 
     fetchEquiposByRegion = () => {
         //por defecto muestro los equipos de kanto
-        firebase.database().ref('equipo/' + this.userInfo.id + '/' + this.state.selectedRegionText).on('value', (data) => {
+        firebase.database().ref('equipo/' + this.state.selectedRegionText + '/' + this.userInfo.id).on('value', (data) => {
             this.setState({ listEquipos : this.convertListEquiposToArray(data) });
         })
     }
@@ -120,6 +118,17 @@ class Equipos extends React.Component {
 
     goToEditEquipo = (equipo) => {
         this.props.navigation.navigate('AddEquipo', { region : this.state.selectedRegion, equipo : equipo});
+    }
+
+    deleteEquipo = (equipo) => {
+        console.log('equipo a eliminar', equipo);
+        firebase.database().ref('equipo/' + this.state.selectedRegionText + '/' + this.userInfo.id + '/' + equipo.key).remove()
+            .then(data => {
+                console.log('dato eliminado', data);
+            })
+            .catch(err => {
+                console.log('error al eliminar dato', err);
+            })
     }
 
     render() {
@@ -170,19 +179,35 @@ class Equipos extends React.Component {
                             onPress={() => this.goToEditEquipo(equipo)}>
                             <List.Item
                                 title={equipo.data.name}
-                                description={"Total de pokemons : " + Object.keys(equipo.data.pokemons).length}
+                                description={`Código : ${equipo.data.key}`}
                                 left={props => <List.Icon {...props} icon="pokemon-go" />}
+                                right={
+                                    props => 
+                                        <TouchableRipple onPress={() => this.deleteEquipo(equipo)}>
+                                            <List.Icon {...props} icon="delete" />
+                                        </TouchableRipple>
+                                    }
                             />
                         </TouchableRipple>
                     ))}
                     </View>
 
-                    <Button 
-                        style={{ position : 'absolute', bottom : 15, borderRadius : 30, alignSelf : 'center' }} 
-                        icon="plus" 
-                        mode="contained"
-                        onPress={() => this.goToAddEquipo()}>Crear equipo</Button>
+                    
+                    
                 </View>
+
+                <View style={{ flex : 1, position : 'absolute', width : '100%', bottom : 15, flexDirection : 'row', justifyContent : 'center', alignItems : 'center' }}>
+                        <Button 
+                            style={{ borderRadius : 30, marginRight : 5 }} 
+                            icon="plus" 
+                            mode="contained"
+                            onPress={() => this.goToAddEquipo()}>Crear equipo</Button>
+                        <Button 
+                            style={{ borderRadius : 30, marginLeft : 5 }} 
+                            icon="plus" 
+                            mode="outlined"
+                            onPress={() => this.goToAddEquipo()}>ingresar código</Button>
+                    </View>
             </Provider>
         );
     }
